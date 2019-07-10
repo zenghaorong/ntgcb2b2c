@@ -417,6 +417,21 @@ layout("/layouts/store.html"){
                             </div>
                             <div class="col-sm-2" style="color: red;">建议尺寸：375*250</div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="videoUrl" class="col-sm-2 control-label">上传视频</label>
+                            <div class="col-sm-6">
+                                <div id="queue"></div>
+                                <div>
+                                    <input id="file_upload_video" name="file_upload_video" type="file"
+                                           multiple="false">
+                                </div>
+                                <div id="video" style="padding: 5px;"></div>
+                                <input type="hidden" id="videoUrl" name="videoUrl" data-parsley-required="true"  value="">
+                            </div>
+                            <div class="col-sm-2" style="color: red;">建议格式：MP4</div>
+                        </div>
+
                         <div class="form-group">
                             <label for="wapNote" class="col-sm-2 control-label">商品详情</label>
                             <div class="col-sm-8">
@@ -777,6 +792,71 @@ layout("/layouts/store.html"){
         $('#file_upload_album_pc').uploadifive(initAlbumOptions("pc"));
         $('#file_upload_album_wap').uploadifive(initAlbumOptions("wap"));
         $('#file_upload_album_tv').uploadifive(initAlbumOptions("tv"));
+
+
+        //上传视频
+        $('#file_upload_video').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '请选择视频',
+            'fileType': 'video/mp4,video/3GP,video/AVI',
+            'fileSizeLimit': 1024000,
+            'queueSizeLimit': 1,
+            'overrideEvents': ['onDialogClose', 'onError'],
+            'formData': {},
+            'queueID': 'queue',
+            'uploadScript': '${base}/open/ueditor/bd/uploadvideo',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.state == 'SUCCESS') {
+                    Toast.success(data.msg);
+                    $("#video").html('<video src="'+data.url+'" controls="controls">\n' +
+                        'your browser does not support the video tag\n' +
+                        '</video>\n');
+                    $("#videoUrl").val(data.url);
+                } else {
+                    clearVideo();
+                    Toast.error('服务器异常');
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                clearVideo();
+            },
+            'onError': function (errorType, file) {
+                if (file != 0) {
+                    // var settings = $("#" + fileuploadId).uploadifive().settings;
+                    switch (errorType) {
+                        case 'UPLOAD_LIMIT_EXCEEDED':
+                            Toast.error("上传的文件数量已经超出系统限制的1个文件！");
+                            break;
+                        case 'FILE_SIZE_LIMIT_EXCEEDED':
+                            Toast.error("文件大小超出系统限制的1G大小！");
+                            break;
+                        case 'FORBIDDEN_FILE_TYPE':
+                            Toast.error("文件类型不正确！");
+                            break;
+                    }
+                }
+            },
+            'onClearQueue': function (queue) {
+                clearVideo();
+            },
+            'onCancel': function () {
+                clearVideo();
+            }
+        });
+
+        /**
+         * 上传视频
+         */
+        function clearVideo() {
+            $("#video").html("");
+            $("#queue").html("");
+            $("#videoUrl").val("");
+        }
+
 
         //保存草稿
         $(".js-goods-btn-save-to-drafts").click(function(){

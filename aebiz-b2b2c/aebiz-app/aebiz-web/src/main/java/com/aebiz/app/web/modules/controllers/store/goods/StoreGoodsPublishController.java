@@ -124,7 +124,7 @@ public class StoreGoodsPublishController {
                         @RequestParam(value = "tmp_offAt", required = false) String offAt,
                         @RequestParam("front_classes") String storeGoodsclass,
                         @RequestParam("tags")String tags, @RequestParam("images") String images,
-                        @RequestParam("products") String products) {
+                        @RequestParam("products") String products,String videoUrl) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             if (Strings.isNotBlank(saleAt)) {
@@ -140,6 +140,7 @@ public class StoreGoodsPublishController {
             goods.setStoreGoodsClassList(Json.fromJsonAsList(Store_goodsclass.class, storeGoodsclass));
             goods.setGoodsProducts(Json.fromJsonAsList(Goods_product.class, products));
             goods.setStoreId(StringUtil.getStoreId());
+            goods.setVideoUrl(videoUrl);
             //校验SKU
             if (goodsService.isDuplicatedSku(goods)) {
                 return Result.error("goods.main.tip.skuhasbeenused");

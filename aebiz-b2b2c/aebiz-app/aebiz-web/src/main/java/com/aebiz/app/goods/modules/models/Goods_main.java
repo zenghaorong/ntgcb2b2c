@@ -64,6 +64,12 @@ public class Goods_main extends BaseModel implements Serializable {
     private String imgList;
 
     @Column
+    @Comment("商品视频")
+    @ColDefine(type = ColType.VARCHAR, width = 255)
+    private String videoUrl;
+
+
+    @Column
     @Comment("商品详情")
     @ColDefine(type = ColType.TEXT)
     private String pcNote;
@@ -602,5 +608,13 @@ public class Goods_main extends BaseModel implements Serializable {
 
     public void setGoods_product(Goods_product goods_product) {
         this.goods_product = goods_product;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 }

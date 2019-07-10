@@ -35,7 +35,7 @@
             <!--<li class="hiSlider-item item-clone" style="width: 415px; height: 300px; float: left;"><a href="javascript:void(0);"><img src="${base!}/assets/front/newH5/images/banner.png" alt=""></a></li>-->
         <!--</ul>-->
 
-        <div id="slider" class="mui-slider" >
+        <div id="slider" class="mui-slider" style="display: none;">
             <div class="mui-slider-group mui-slider-loop" >
                 <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
                 <div class="mui-slider-item mui-slider-item-duplicate">
@@ -44,12 +44,17 @@
                     </a>
                 </div>
 
+
+
                 <!-- 第二张 -->
                 <div class="mui-slider-item" v-for="item in product.imageList" :key="item.id">
                     <a href="#">
                         <img :src="item.imgAlbum" style="height: 250px;">
                     </a>
                 </div>
+
+
+
 
                 <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
                 <div class="mui-slider-item mui-slider-item-duplicate">
@@ -62,6 +67,14 @@
                 <div class="mui-indicator"  v-for="item in product.imageList"></div>
             </div>
         </div>
+
+        <!--视频-->
+        <div id="video" style="display: none;">
+            <video :src="product.videoUrl" id="video2" controls="controls" style="width: 100%;height: 250px;">
+                your browser does not support the video tag
+            </video>
+        </div>
+
     <!--</section>-->
     <section class="detailsMessage bgGray">
         <p>{{product.name}}</p>
@@ -162,6 +175,12 @@
                                 window.setTimeout(function () {
                                     $(".mui-indicator").eq(0).addClass("mui-active");
                                 },200);
+
+                                if(d.videoUrl == '' || d.videoUrl == null){
+                                    $("#slider").css("display","block");
+                                }else {
+                                    $("#video").css("display","block");
+                                }
 
                             } else {
 

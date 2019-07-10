@@ -239,7 +239,7 @@ public class StoreGoodsListController {
                          @RequestParam(value = "tmp_offAt", required = false) String offAt,
                          @RequestParam("front_classes") String storeGoodsclass,
                          @RequestParam("tags")String tags, @RequestParam("images") String images,
-                         @RequestParam("products") String products) {
+                         @RequestParam("products") String products,String videoUrl) {
         try {
             List<Goods_image> list = Json.fromJsonAsList(Goods_image.class, images);
             if(list==null || list.size()<1){
@@ -258,6 +258,7 @@ public class StoreGoodsListController {
             goods.setImageList(Json.fromJsonAsList(Goods_image.class, images));
             goods.setStoreGoodsClassList(Json.fromJsonAsList(Store_goodsclass.class, storeGoodsclass));
             goods.setGoodsProducts(Json.fromJsonAsList(Goods_product.class, products));
+            goods.setVideoUrl(videoUrl);
             //校验SKU
             if (goodsService.isDuplicatedSku(goods)) {
                 return Result.error("goods.main.tip.skuhasbeenused");
