@@ -26,6 +26,8 @@
 <body ontouchstart="">
     <section class="center" id="product">
     <a href="javascript:history.go(-1)" class="return"><img src="${base!}/assets/front/newH5/images/arrowRight.png" alt="" /></a>
+    <!--<span id="tp" onclick="djtp()" class="return2"><span >图片</span></span>-->
+    <!--<span id="sp" onclick="djsp()" style="display: none;" class="return2"><span >视频</span></span>-->
     <!--<section class="banner"  id="wrap">-->
         <!--<ul  class="hiSlider hiSlider1" >-->
 
@@ -70,13 +72,22 @@
 
         <!--视频-->
         <div id="video" style="display: none;">
-            <video :src="product.videoUrl" id="video2" controls="controls" style="width: 100%;height: 250px;">
+            <video :src="product.videoUrl" style="width: 100%;height: 250px;" :poster="banner"
+                   id="video2" controls="" loop='loop' >
                 your browser does not support the video tag
             </video>
         </div>
 
     <!--</section>-->
     <section class="detailsMessage bgGray">
+        <p style="width: 30%;margin: 0 auto;" id="zp">
+            <button type="button" onclick="djsp()" id="sp" style="padding: 4px;" class="mui-btn mui-btn-warning">
+                视频
+            </button>
+            <button type="button" onclick="djtp()" id="tp" style="padding: 4px;" class="mui-btn mui-btn-warning">
+                图片
+            </button>
+        </p>
         <p>{{product.name}}</p>
         <input type="hidden" id="stock" :value="product.stock">
         <h1>现价：<i>￥</i><span>{{product.price}}</span><em>厂商指导价：<del>￥{{product.marketPrice}}</del></em></h1>
@@ -178,8 +189,12 @@
 
                                 if(d.videoUrl == '' || d.videoUrl == null){
                                     $("#slider").css("display","block");
+                                    $("#zp").css("display","none");
                                 }else {
                                     $("#video").css("display","block");
+                                    $("#tp").css("color","#222");
+                                    $("#tp").css("background-color","#ddd");
+                                    $("#tp").css("border","#929292");
                                 }
 
                             } else {
@@ -340,6 +355,34 @@
         }
 
         $("#productNum").html(num-1);
+    }
+
+    //点击图片
+    function djtp() {
+        $("#sp").css("color","#222");
+        $("#sp").css("background-color","#ddd");
+        $("#sp").css("border","#929292");
+
+        $("#tp").css("color","#fff");
+        $("#tp").css("background-color","#f0ad4e");
+        $("#tp").css("border","#f0ad4e");
+
+        $("#slider").css("display","block");
+        $("#video").css("display","none");
+    }
+
+    //点击视频
+    function djsp() {
+        $("#tp").css("color","#222");
+        $("#tp").css("background-color","#ddd");
+        $("#tp").css("border","#929292");
+
+        $("#sp").css("color","#fff");
+        $("#sp").css("background-color","#f0ad4e");
+        $("#sp").css("border","#f0ad4e");
+
+        $("#video").css("display","block");
+        $("#slider").css("display","none");
     }
 </script>
         </body>

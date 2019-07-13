@@ -128,6 +128,18 @@ public class ProductController {
             }
             Pagination res = goodsService.listPage(pageNumber, 2000, cnd);
             List<?> resList = res.getList();
+            //如果是查热门
+            if(StringUtils.isNotEmpty(isRecommend)){
+                if(resList==null || resList.size()<1){
+                    Cnd cnd2 = Cnd.NEW();
+                    cnd2.and("delFlag", "=", 0 );
+                    cnd2.and("sale", "=", 1);
+                    cnd2.and("status", "=", 3);
+                    cnd2.desc("opAt");
+                    Pagination res2 = goodsService.listPage(pageNumber, 4, cnd2);
+                    resList = res2.getList();
+                }
+            }
 //            System.out.println("8888888:"+JSON.toJSONString(resList));
             List<Goods_main> productList = new ArrayList<>();
             if(resList!=null&&resList.size()>0){
