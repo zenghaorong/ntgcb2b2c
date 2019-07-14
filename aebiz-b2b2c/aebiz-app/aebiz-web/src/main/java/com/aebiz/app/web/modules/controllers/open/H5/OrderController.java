@@ -310,6 +310,7 @@ public class OrderController {
                 ) {
             String id = (String) map.get("productId");
             String num = (String) map.get("num");
+            int thisNum = Integer.parseInt(num);
             Goods_main good = goodsService.fetch(id);
 
             Order_goods order_goods = new Order_goods();
@@ -320,7 +321,11 @@ public class OrderController {
             List<Goods_product> gpList = goodsProductService.query(proCnd);
             if (gpList != null && gpList.size() > 0) {
                 Goods_product goods_product = gpList.get(0);
-
+                //判断取批发价
+                if(goods_product.getWholesaleNum()!=null && thisNum>=goods_product.getWholesaleNum()){
+                    Integer price =   goods_product.getWholesalePrice();
+                    goods_product.setSalePrice(price);
+                }
 
                 Integer salePrice = goods_product.getSalePrice(); //单位是分
                 int n = Integer.parseInt(num);

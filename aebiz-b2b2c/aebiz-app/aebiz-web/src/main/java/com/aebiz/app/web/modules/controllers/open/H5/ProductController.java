@@ -281,6 +281,8 @@ public class ProductController {
             List<Goods_main> goods_mainList = new ArrayList<>();
             for(Map<String,Object> map:list) {
                 String id = (String) map.get("productId");
+                String num = (String) map.get("num");
+                int thisNum = Integer.parseInt(num);
                 Cnd cnd = Cnd.NEW();
                 cnd.and("delFlag", "=", 0);
                 cnd.and("id", "=", id);
@@ -299,12 +301,20 @@ public class ProductController {
                 if (gpList != null && gpList.size() > 0) {
                     double salePrice = gpList.get(0).getSalePrice();
                     int marketPrice = gpList.get(0).getMarketPrice();
+                    Integer wholesalePrice = gpList.get(0).getWholesalePrice();//批发价
+                    Integer wholesaleNum = gpList.get(0).getWholesaleNum();//批发数量阀值
+
                     double price = CalculateUtils.div(salePrice,100,2);
+
+                    //判断取批发价
+                    if(wholesaleNum!=null && thisNum>=wholesaleNum){
+                        price =   CalculateUtils.div(wholesalePrice,100,2);
+                    }
+
                     o.setPrice(price + "");
                     o.setMarketPrice(marketPrice / 100 + "");
                     o.setSaleNumMonth(gpList.get(0).getSaleNumMonth() + "");
                 }
-                String num = (String) map.get("num");
                 o.setNum(num);
                 goods_mainList.add(o);
             }

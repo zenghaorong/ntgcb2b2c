@@ -75,6 +75,18 @@ public class Goods_product extends BaseModel implements Serializable {
     private Integer marketPrice;
 
     @Column
+    @Comment("批发价")
+    @ColDefine(type = ColType.INT)
+    private Integer wholesalePrice;
+
+    @Column
+    @Comment("使用批发价格的商品下单数量阀值")
+    @ColDefine(type = ColType.INT)
+    private Integer wholesaleNum;
+
+
+
+    @Column
     @Comment("重量")
     @ColDefine(type = ColType.INT)
     @Default("0")
@@ -508,5 +520,21 @@ public class Goods_product extends BaseModel implements Serializable {
 
     public void setMemberTypeList(List<Member_type> memberTypeList) {
         this.memberTypeList = memberTypeList;
+    }
+
+    public Integer getWholesalePrice() {
+        return wholesalePrice;
+    }
+
+    public void setWholesalePrice(Integer wholesalePrice) {
+        this.wholesalePrice = wholesalePrice;
+    }
+
+    public Integer getWholesaleNum() {
+        return wholesaleNum;
+    }
+
+    public void setWholesaleNum(Integer wholesaleNum) {
+        this.wholesaleNum = wholesaleNum;
     }
 }

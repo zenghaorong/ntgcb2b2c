@@ -235,6 +235,22 @@ layout("/layouts/store.html"){
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label for="wholesalePrice" class="col-sm-2 control-label">批发价</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">批发价</span>
+                                                <input type="text" id="wholesalePrice" class="form-control input-sm" name="wholesalePrice" data-parsley-price="true" placeholder="批发价">
+                                            </div>
+                                        </div>
+                                        <label for="wholesaleNum" class="col-sm-1 control-label"><span style="color: red">*</span>批发价购买数量</label>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">批发价购买数量</span>
+                                                <input type="text" id="wholesaleNum" class="form-control input-sm" name="wholesaleNum" data-parsley-price="true" data-parsley-required="true" placeholder="批发价购买数量">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="stock" class="col-sm-2 control-label"><span style="color: red">*</span>${msg["goods.product.column.stock"]}</label>
                                         <div class="col-sm-2">
                                             <input type="text" id="stock" class="form-control input-sm" name="stock" value="0" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" placeholder="${msg['goods.main.placeholder.defult']}0">
@@ -1560,6 +1576,8 @@ layout("/layouts/store.html"){
             var salePrice = $("input[name='salePrice']", $productDiv).val();
             var costPrice = $("input[name='costPrice']", $productDiv).val();
             var marketPrice = $("input[name='marketPrice']", $productDiv).val();
+            var wholesalePrice = $("input[name='wholesalePrice']", $productDiv).val();
+            var wholesaleNum = $("input[name='wholesaleNum']", $productDiv).val();
             var saleToAllAera = $("input[name='saleToAllAera']", $productDiv).is(":checked");
             var partitionBy = $("input[name='partitionBy']:checked", $productDiv).val();
             var areaList = getAreaList($productDiv);
@@ -1584,6 +1602,8 @@ layout("/layouts/store.html"){
                 'salePrice': parseFloat(salePrice) * 100,
                 'costPrice': parseFloat(costPrice) * 100,
                 'marketPrice': parseFloat(marketPrice) * 100,
+                'wholesalePrice':parseFloat(wholesalePrice) * 100,
+                'wholesaleNum': wholesaleNum,
                 'saleToAllAera': saleToAllAera,
                 'partitionBy': partitionBy,
                 'areaList': areaList,

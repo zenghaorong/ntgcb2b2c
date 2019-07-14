@@ -291,6 +291,41 @@ layout("/layouts/store.html"){
                                             </div>
                                         </div>
                                     </div>
+                                <!--#if (!isEmpty(productsList[0].wholesalePrice!)){#-->
+                                    <div class="form-group">
+                                        <label for="wholesalePrice" class="col-sm-2 control-label">批发价</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">批发价</span>
+                                                <input type="text" id="wholesalePrice" value="${@money.fenToYuan(productsList[0].wholesalePrice!)}" class="form-control input-sm" name="wholesalePrice" data-parsley-price="true" placeholder="批发价">
+                                            </div>
+                                        </div>
+                                        <label for="wholesaleNum" class="col-sm-1 control-label"><span style="color: red">*</span>批发价购买数量</label>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">批发价购买数量</span>
+                                                <input type="text" id="wholesaleNum" value="${productsList[0].wholesaleNum!}" class="form-control input-sm" name="wholesaleNum" data-parsley-price="true" data-parsley-required="true" placeholder="批发价购买数量">
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!--#}else{#-->
+                                <div class="form-group">
+                                    <label for="wholesalePrice" class="col-sm-2 control-label">批发价</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">批发价</span>
+                                            <input type="text" id="wholesalePrice" value="" class="form-control input-sm" name="wholesalePrice" data-parsley-price="true" placeholder="批发价">
+                                        </div>
+                                    </div>
+                                    <label for="wholesaleNum" class="col-sm-1 control-label"><span style="color: red">*</span>批发价购买数量</label>
+                                    <div class="col-sm-3">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">批发价购买数量</span>
+                                            <input type="text" id="wholesaleNum" value="" class="form-control input-sm" name="wholesaleNum" data-parsley-price="true" data-parsley-required="true" placeholder="批发价购买数量">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--#}#-->
                                     <div class="form-group">
                                         <label for="stock" class="col-sm-2 control-label"><span style="color: red">*</span>${msg["goods.product.column.stock"]}</label>
                                         <div class="col-sm-2">
@@ -847,6 +882,8 @@ layout("/layouts/store.html"){
                                         <th class="product-price-sm">${msg["goods.product.column.costPrice"]}(${msg["goods.main.unit.money"]})</th>
                                         <th class="product-price-sm">${msg["goods.product.column.salePrice"]}(${msg["goods.main.unit.money"]})</th>
                                         <th class="product-price-sm">${msg["goods.product.column.marketPrice"]}(${msg["goods.main.unit.money"]})</th>
+                                        <th class="product-price-sm">${msg["goods.product.column.wholesalePrice"]}(${msg["goods.main.unit.money"]})</th>
+                                        <th class="product-price-sm">${msg["goods.product.column.wholesaleNum"]}批发价购买数量</th>
                                         <th class="numeric">${msg["goods.product.column.partitionBy"]}</th>
                                         <th class="numeric">${msg['goods.product.column.saleToMemberType']}</th>
                                         <th class="numeric">${msg["goods.product.column.deliveryTime"]}</th>
@@ -878,6 +915,8 @@ layout("/layouts/store.html"){
                                         <td><input name="costPrice" value="${@money.fenToYuan(o.costPrice)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
                                         <td><input name="salePrice" value="${@money.fenToYuan(o.salePrice)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
                                         <td><input name="marketPrice" value="${@money.fenToYuan(o.marketPrice)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
+                                        <td><input name="wholesalePrice" value="${@money.fenToYuan(o.wholesalePrice!)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
+                                        <td><input name="wholesaleNum" value="${o.wholesaleNum!}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
                                         <td>
                                             <div class="js-product-area" align="left" >
                                                 <!--#{
@@ -1269,6 +1308,8 @@ layout("/layouts/store.html"){
                     str += "<td><input name='costPrice' value='' type='text' class='form-control product-number-input' data-parsley-price='true' ></td>";
                     str += "<td><input name='salePrice' type='text' value='' class='form-control product-number-input' data-parsley-price='true' data-parsley-required='true'></td>";
                     str += "<td><input name='marketPrice' value='' type='text' class='form-control product-number-input' data-parsley-price='true' ></td>";
+                    str += "<td><input name='wholesalePrice' value='' type='text' class='form-control product-number-input' data-parsley-price='true' ></td>";
+                    str += "<td><input name='wholesaleNum' value='' type='text' class='form-control product-number-input' data-parsley-price='true' ></td>";
                     str += "<td>";
                     str += $(".js-product-area-hidden").clone().show().html();
                     str += "</td>";
@@ -1571,6 +1612,8 @@ layout("/layouts/store.html"){
                 var salePrice = $("input[name='salePrice']", $self).val();
                 var costPrice = $("input[name='costPrice']", $self).val();
                 var marketPrice = $("input[name='marketPrice']", $self).val();
+                var wholesalePrice = $("input[name='wholesalePrice']", $self).val();
+                var wholesaleNum = $("input[name='wholesaleNum']", $self).val();
                 var saleToAllAera = $("input[name='saleToAllAera']", $self).is(":checked");
                 var saleToMemberType = $("input[name='saleToMemberType']:checked", $self).val()||0;
                 var memberTypeList = JSON.parse($(".js-product-member-values", $self).val());
@@ -1595,6 +1638,8 @@ layout("/layouts/store.html"){
                     'salePrice': parseFloat(salePrice) * 100,
                     'costPrice': parseFloat(costPrice) * 100,
                     'marketPrice': parseFloat(marketPrice) * 100,
+                    'wholesalePrice': parseFloat(wholesalePrice) * 100,
+                    'wholesaleNum': wholesaleNum,
                     'partitionBy': areas.partitionBy,
                     'areaList': areas.values,
                     'saleToMemberType': saleToMemberType,
@@ -2609,6 +2654,9 @@ layout("/layouts/store.html"){
             costPrice=costPrice.toFixed(2);
             var marketPrice = $("input[name='marketPrice']", $productDiv).val()*100;
             marketPrice=marketPrice.toFixed(2);
+            var wholesalePrice = $("input[name='wholesalePrice']", $productDiv).val()*100;
+            wholesalePrice=wholesalePrice.toFixed(2);
+            var wholesaleNum = $("input[name='wholesaleNum']", $productDiv).val();
             var saleToAllAera = $("input[name='partitionBy'][value='0']", $productDiv).is(":checked");
             var partitionBy = $("input[name='partitionBy']:checked", $productDiv).val();
             var areaList = getAreaList($productDiv);
@@ -2635,6 +2683,8 @@ layout("/layouts/store.html"){
                 'salePrice': parseInt(salePrice) ,
                 'costPrice': parseInt(costPrice) ,
                 'marketPrice': parseInt(marketPrice),
+                'wholesalePrice': parseInt(wholesalePrice),
+                'wholesaleNum': wholesaleNum,
                 'saleToAllAera': saleToAllAera,
                 'partitionBy': partitionBy,
                 'areaList': areaList,
