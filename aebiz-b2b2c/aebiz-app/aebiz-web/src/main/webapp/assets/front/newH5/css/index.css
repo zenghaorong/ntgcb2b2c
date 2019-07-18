@@ -145,10 +145,10 @@ header{
 }
 .searchCondition{
     font-size: 0;
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
-    text-align-last: justify;
-    -webkit-text-align-last: justify;
+    /*text-align-last: justify;*/
+    /*-webkit-text-align-last: justify;*/
 }
 .searchCondition a{
     color: #ffffff;
@@ -157,6 +157,7 @@ header{
     font-size: 16px;
     position: relative;
     margin: 0 0 7px 0;
+    margin-right: 18%;
 }
 .searchCondition a:last-child{
     margin-right: 0;
