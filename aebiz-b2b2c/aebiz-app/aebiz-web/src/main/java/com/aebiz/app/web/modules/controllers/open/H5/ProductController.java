@@ -136,8 +136,9 @@ public class ProductController {
                     cnd2.and("sale", "=", 1);
                     cnd2.and("status", "=", 3);
                     cnd2.desc("opAt");
-                    Pagination res2 = goodsService.listPage(pageNumber, 4, cnd2);
-                    resList = res2.getList();
+                    cnd2.limit(1,4);
+                    resList = goodsService.query(cnd2);
+//                    resList = res2.getList();
                 }
             }
 //            System.out.println("8888888:"+JSON.toJSONString(resList));
