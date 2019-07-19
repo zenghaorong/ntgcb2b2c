@@ -939,6 +939,38 @@ public class StoreOrderMainController {
     }
 
     /**
+     * 修改运费
+     * @param id
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = {"/updateFreight/{id}", "/updateFreight"})
+    @SJson
+    @SLog(description = "修改运费")
+    public Object updateFreight(@PathVariable(required = false) String id,
+                             @RequestParam("freight") String freight,
+                             HttpServletRequest req) {
+        try {
+                //根据订单id，查询订单信息
+                Order_main orderMain = orderMainService.fetch(id);
+
+                //判断订单是否为空，为空则直接返回错误信息
+                if(orderMain == null){
+                    return Result.error("order.main.noOrder.notice");
+                }
+            Double m = Double.parseDouble(freight);
+            Double money = m * 100;
+            orderMain.setPayMoney(orderMain.getPayMoney()-orderMain.getFreightMoney()+money.intValue());
+            orderMain.setFreightMoney(money.intValue());
+            orderMainService.update(orderMain);
+            orderMainService.clearCache();
+            return Result.success("globals.result.success");
+        } catch (Exception e) {
+            return Result.error("globals.result.error");
+        }
+    }
+
+    /**
      * 保存订单审核
      * @param id
      * @param ids
