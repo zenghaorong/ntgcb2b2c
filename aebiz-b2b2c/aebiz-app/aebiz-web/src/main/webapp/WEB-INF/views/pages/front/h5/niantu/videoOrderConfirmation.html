@@ -95,9 +95,11 @@
             <div style="-webkit-user-select:text !important;">积分抵扣:&nbsp<input id="integralNum" placeholder="" v-on:blur="useIntegral()"  style="height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important" value=""></div>
             (剩余积分：{{memberIntegral.useAbleIntegral}})
             <input type="hidden" :value="memberIntegral.useAbleIntegral" id="totalIntegral">
+            <input type="hidden" value="${IntegralRate}" id="IntegralRate">
         </div>
         <div class="mui-card-header">
-            <p><span>说明：</span>1积分抵扣1分钱</p>
+            <p><span>说明：</span>1积分抵扣1分钱</br>
+                <span>最多可使用{{canUserIntegral}}积分来抵扣商品</span></p>
         </div>
         <div class="mui-card-header" style="display: none">
             运费<span style="color: red;">￥0</span>
@@ -170,6 +172,7 @@
             zongPrice3:'${payMoney!}',
             zongPrice4:'${payMoney!}',
             zongPrice5:0,
+            canUserIntegral:0,
             yunPrice:0,
             coupons:[],
             couponId:'',
@@ -202,6 +205,7 @@
                             self.zongPrice = data.data.price;
                             self.zongPrice2=self.zongPrice;
                             self.getMyOrderCoupon();
+                            self.canUserIntegral = parseInt(self.zongPrice*$("#IntegralRate").val()*100);
                         } else {
 
                         }
@@ -249,6 +253,15 @@
                     });
                     $("#integralNum").val(totalIntegral);
                 }
+                if(integral>this.canUserIntegral){
+                    layer.open({
+                        content: "该商品最多可使用"+this.canUserIntegral+"积分抵扣"
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    $("#integralNum").val(this.canUserIntegral);
+                    integral=this.canUserIntegral;
+                }
                 // this.zongPrice=this.zongPrice2;
                 if(integral == ""){
                     integral = 0;
@@ -267,6 +280,7 @@
                     this.zongPrice = this.zongPrice - integral / (this.integralMoney * 1);
                 }
                 this.zongPrice=this.zongPrice.toFixed(2);
+                self.canUserIntegral = parseInt(self.zongPrice*$("#IntegralRate").val()*100);
             },
             useIntegral2:function(){
                 var integral= $("#integralNum2").val();
@@ -323,6 +337,7 @@
                     self.zongPrice = self.zongPrice - j.deductibleAmount;
                     self.zongPrice5 = self.zongPrice;
                     self.useIntegral();
+                    self.canUserIntegral = parseInt(self.zongPrice*$("#IntegralRate").val()*100);
                 }
             },
             save:function () {

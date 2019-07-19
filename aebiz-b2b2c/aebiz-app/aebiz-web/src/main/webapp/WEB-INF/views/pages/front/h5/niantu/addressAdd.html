@@ -42,7 +42,7 @@
     </h1>
 </header>
 
-<div style="margin-top: 44px;" id="vue">
+<div style="margin-top: 44px;" id="address">
     <form class="mui-input-group">
         <div class="mui-input-row">
             <label>姓名</label>
@@ -51,6 +51,24 @@
         <div class="mui-input-row">
             <label>手机号</label>
             <input v-model="mobile" type="tel" class="mui-input-clear" placeholder="请输入手机号">
+        </div>
+        <div class="mui-input-row">
+            <label>省</label>
+            <select id="province" onchange="getCity()">
+                <option value=''>请选择省</option>
+            </select>
+        </div>
+        <div class="mui-input-row">
+            <label>城市</label>
+            <select id="city" onchange="getCityArea()">
+                <option value=''>请选择市</option>
+            </select>
+        </div>
+        <div class="mui-input-row">
+            <label>区县</label>
+            <select id="area">
+                <option value=''>请选择区县</option>
+            </select>
         </div>
         <div class="mui-input-row">
             <label>收货地址</label>
@@ -77,8 +95,11 @@
     });
 
     var vue = new Vue({
-        el: '#vue',
+        el: '#address',
         data: {
+            provinces: [],
+            citys:[],
+            areas:[],
             name: '',
             mobile:'',
             address:''
@@ -86,15 +107,63 @@
         created:function () {   //实例初始化创建完成执行
 
             // this.getvideoList()     //调用自身方法
-
+            this.getProvince();
         },
         methods:{              //定义封装方法
             //保存收货地址
+            getProvince:function(){
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/address/getProvinces.html",
+                    dataType:"JSON",
+                    data:{
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            var opt = "<option value=''>请选择省</option>";
+                            $("#province").empty();
+                            $("#city").empty();
+                            $("#area").empty();
+                            for(var i=0;i<d.length;i++){
+                                var o = "<option value="+d[i].id+">"+d[i].name+"</option>";
+                                opt=opt+o;
+                            }
+                            $("#province").append(opt);
+                        } else {
+
+                        }
+                    }
+                });
+            },
             add:function () {
                 var self = this;
                 if(self.name==""||self.name==null||self.name==undefined){
                     layer.open({
                         content: "请填写收货人姓名!"
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    return;
+                }
+                var pro = $("#province").val();
+                var provinceName =$("#province").find("option:selected").text();
+                var cityName =$("#city").find("option:selected").text();
+                var areaName =$("#area").find("option:selected").text();
+                var city = $("#city").val();
+                var area = $("#area").val();
+
+                if(pro==""||pro==null||pro==undefined){
+                    layer.open({
+                        content: "请选择省!"
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    return;
+                }
+                if(city==""||city==null||city==undefined){
+                    layer.open({
+                        content: "请选择市!"
                         ,skin: 'msg'
                         ,time: 2 //2秒后自动关闭
                     });
@@ -108,6 +177,7 @@
                     });
                     return;
                 }
+                // self.address=provinceName+cityName+areaName+self.address;
                 if(self.mobile==""||self.mobile==null||self.mobile==undefined){
                     layer.open({
                         content: "请填写收货人手机!"
@@ -133,6 +203,9 @@
                     data:{
                         name:self.name,
                         mobile:self.mobile,
+                        province:provinceName,
+                        city:cityName,
+                        area:areaName,
                         address:self.address
                     },
                     success:function(data){
@@ -165,6 +238,57 @@
         } else {
             return true;
         }
+    }
+    function getCity() {
+        var id = $("#province").val();
+        $.ajax({
+            type:"POST",
+            url:"${base!}/open/h5/address/getCitys.html",
+            dataType:"JSON",
+            data:{
+                provinceId:id
+            },
+            success:function(data){
+                if (data.code == 0) {
+                    var d = data.data;
+                    var opt = "<option value=''>请选择市</option>";
+                    $("#city").empty();
+                    $("#area").empty();
+                    for(var i=0;i<d.length;i++){
+                        var o = "<option  value="+d[i].id+">"+d[i].name+"</option>";
+                        opt=opt+o;
+                    }
+                    $("#city").append(opt);
+                } else {
+
+                }
+            }
+        });
+    }
+    function getCityArea() {
+        var id = $("#city").val();
+        $.ajax({
+            type:"POST",
+            url:"${base!}/open/h5/address/getCitys.html",
+            dataType:"JSON",
+            data:{
+                provinceId:id
+            },
+            success:function(data){
+                if (data.code == 0) {
+                    var d = data.data;
+                    var opt = "<option value=''>请选择区县</option>";
+                    $("#area").empty();
+                    for(var i=0;i<d.length;i++){
+                        var o = "<option  value="+d[i].id+">"+d[i].name+"</option>";
+                        opt=opt+o;
+                    }
+                    $("#area").append(opt);
+                } else {
+
+                }
+            }
+        });
     }
 
 </script>

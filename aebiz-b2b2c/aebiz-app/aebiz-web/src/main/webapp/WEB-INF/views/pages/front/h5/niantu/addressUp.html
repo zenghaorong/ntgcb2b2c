@@ -50,7 +50,26 @@
         </div>
 
     </form>
+    <div class="mui-input-row">
+        <label>省</label>
+        <select id="province" onchange="getCity()">
+            <option value=''>请选择省</option>
+        </select>
+    </div>
+    <div class="mui-input-row">
+        <label>城市</label>
+        <select id="city" onchange="getCityArea()">
+            <option value=''>请选择市</option>
+        </select>
+    </div>
+    <div class="mui-input-row">
+        <label>区县</label>
+        <select id="area">
+            <option value=''>请选择区县</option>
+        </select>
+    </div>
     <div class="mui-input-row" style="margin: 10px 5px;">
+
         <textarea v-model="address"  id="textarea" rows="5" placeholder="请输入收货地址"></textarea>
     </div>
     <div style="width: 300px;margin: 0 auto;">
@@ -79,11 +98,37 @@
             address:''
         },
         created:function () {   //实例初始化创建完成执行
-
+            this.getProvince();
             this.getById()     //调用自身方法
 
         },
-        methods:{              //定义封装方法
+        methods:{
+            //定义封装方法
+            getProvince:function(){
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/address/getProvinces.html",
+                    dataType:"JSON",
+                    data:{
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            var opt = "<option value=''>请选择省</option>";
+                            $("#province").empty();
+                            $("#city").empty();
+                            $("#area").empty();
+                            for(var i=0;i<d.length;i++){
+                                var o = "<option value="+d[i].id+">"+d[i].name+"</option>";
+                                opt=opt+o;
+                            }
+                            $("#province").append(opt);
+                        } else {
+
+                        }
+                    }
+                });
+            },
             //编辑收货地址
             upd:function () {
                 var self = this;
@@ -91,6 +136,28 @@
                 if(self.name==""||self.name==null||self.name==undefined){
                     layer.open({
                         content: "请填写收货人姓名!"
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    return;
+                }
+                var pro = $("#province").val();
+                var provinceName =$("#province").find("option:selected").text();
+                var cityName =$("#city").find("option:selected").text();
+                var areaName =$("#area").find("option:selected").text();
+                var city = $("#city").val();
+                var area = $("#area").val();
+                if(pro==""||pro==null||pro==undefined){
+                    layer.open({
+                        content: "请选择省!"
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    return;
+                }
+                if(city==""||city==null||city==undefined){
+                    layer.open({
+                        content: "请选择市!"
                         ,skin: 'msg'
                         ,time: 2 //2秒后自动关闭
                     });
@@ -131,6 +198,9 @@
                         name:self.name,
                         mobile:self.mobile,
                         address:self.address,
+                        province:provinceName,
+                        city:cityName,
+                        area:areaName,
                         id:'${id!}'
                     },
                     success:function(data){
@@ -183,6 +253,57 @@
         } else {
             return true;
         }
+    }
+    function getCity() {
+        var id = $("#province").val();
+        $.ajax({
+            type:"POST",
+            url:"${base!}/open/h5/address/getCitys.html",
+            dataType:"JSON",
+            data:{
+                provinceId:id
+            },
+            success:function(data){
+                if (data.code == 0) {
+                    var d = data.data;
+                    var opt = "<option value=''>请选择市</option>";
+                    $("#city").empty();
+                    $("#area").empty();
+                    for(var i=0;i<d.length;i++){
+                        var o = "<option  value="+d[i].id+">"+d[i].name+"</option>";
+                        opt=opt+o;
+                    }
+                    $("#city").append(opt);
+                } else {
+
+                }
+            }
+        });
+    }
+    function getCityArea() {
+        var id = $("#city").val();
+        $.ajax({
+            type:"POST",
+            url:"${base!}/open/h5/address/getCitys.html",
+            dataType:"JSON",
+            data:{
+                provinceId:id
+            },
+            success:function(data){
+                if (data.code == 0) {
+                    var d = data.data;
+                    var opt = "<option value=''>请选择区县</option>";
+                    $("#area").empty();
+                    for(var i=0;i<d.length;i++){
+                        var o = "<option  value="+d[i].id+">"+d[i].name+"</option>";
+                        opt=opt+o;
+                    }
+                    $("#area").append(opt);
+                } else {
+
+                }
+            }
+        });
     }
 
 </script>

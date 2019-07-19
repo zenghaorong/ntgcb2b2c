@@ -4,6 +4,8 @@ import com.aebiz.app.acc.modules.models.Account_user;
 import com.aebiz.app.cms.modules.models.Cms_article;
 import com.aebiz.app.member.modules.models.Member_address;
 import com.aebiz.app.member.modules.services.MemberAddressService;
+import com.aebiz.app.shop.modules.models.Shop_area;
+import com.aebiz.app.shop.modules.services.ShopAreaService;
 import com.aebiz.baseframework.base.Result;
 import com.aebiz.baseframework.view.annotation.SJson;
 import org.apache.shiro.SecurityUtils;
@@ -32,6 +34,9 @@ public class AddressH5Controller{
 
     @Autowired
     private MemberAddressService memberAddressService;
+
+    @Autowired
+    private ShopAreaService shopAreaService;
 
     /**
      * 进入收货地址列表页
@@ -81,7 +86,39 @@ public class AddressH5Controller{
             return Result.error("fail");
         }
     }
+    @RequestMapping("getProvinces.html")
+    @SJson
+    public Result getProvinces(){
+        try {
+            Cnd cnd = Cnd.NEW();
+            cnd.and("parentId", "=", "aj1da2wcuqzsa2g51bc7192fd60china");
+            List<Shop_area> list = shopAreaService.query(cnd);
+            return Result.success("ok",list);
+        } catch (Exception e) {
+            log.error("查询省列表异常",e);
+            return Result.error("fail");
+        }
+    }
 
+    /**
+     * 获取市
+     * @param request
+     * @return
+     */
+    @RequestMapping("getCitys.html")
+    @SJson
+    public Result getCitys(HttpServletRequest request){
+        try {
+            String pid = (String)request.getParameter("provinceId");
+            Cnd cnd = Cnd.NEW();
+            cnd.and("parentId", "=", pid);
+            List<Shop_area> list = shopAreaService.query(cnd);
+            return Result.success("ok",list);
+        } catch (Exception e) {
+            log.error("查询省列表异常",e);
+            return Result.error("fail");
+        }
+    }
     /**
      * 查询默认收货地址
      */
@@ -137,7 +174,7 @@ public class AddressH5Controller{
      */
     @RequestMapping("addAddress.html")
     @SJson
-    public Result addAddress(String name,String mobile,String address){
+    public Result addAddress(String name,String mobile,String address,String province,String city,String area){
         try {
             Subject subject = SecurityUtils.getSubject();
             Account_user accountUser = (Account_user) subject.getPrincipal();
@@ -146,6 +183,9 @@ public class AddressH5Controller{
             member_address.setAddress(address);
             member_address.setFullName(name);
             member_address.setMobile(mobile);
+            member_address.setProvince(province);
+            member_address.setCity(city);
+            member_address.setCounty(area);
             memberAddressService.insert(member_address);
             return Result.success("ok");
         } catch (Exception e) {
@@ -159,13 +199,16 @@ public class AddressH5Controller{
      */
     @RequestMapping("updateAddress.html")
     @SJson
-    public Result updateAddress(String id,String name,String mobile,String address){
+    public Result updateAddress(String id,String name,String mobile,String address,String province,String city,String area){
         try {
             Member_address member_address =new Member_address();
             member_address.setId(id);
             member_address.setAddress(address);
             member_address.setFullName(name);
             member_address.setMobile(mobile);
+            member_address.setProvince(province);
+            member_address.setCity(city);
+            member_address.setCounty(area);
             memberAddressService.updateIgnoreNull(member_address);
             return Result.success("ok");
         } catch (Exception e) {

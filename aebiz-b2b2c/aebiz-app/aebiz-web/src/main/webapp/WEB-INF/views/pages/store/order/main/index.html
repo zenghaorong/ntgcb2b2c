@@ -132,6 +132,27 @@ layout("/layouts/store.html"){
     </div>
 </div>
 <!-- 关闭订单 弹出模态 结束 -->
+<!-- 修改运费 弹出模态 开始 -->
+<div id="dialogUpdateFreight" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">修改运费</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                   <label> 请输入运费金额：</label> <input id="freight" value="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button id="okUpdateFreght" type="button" class="btn btn-primary" >修改运费</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改运费 弹出模态 结束 -->
 
 <!-- 订单审核 弹出模态 开始 -->
 <div id="sendProduct" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true" >
@@ -586,6 +607,30 @@ layout("/layouts/store.html"){
             }, "json");
         });
     }
+    //修改运费
+    function updateFreight(id) {
+        var dialog = $("#dialogUpdateFreight");
+        dialog.modal("show");
+        dialog.find("#okUpdateFreght").unbind("click");
+        dialog.find("#okUpdateFreght").bind("click", function (event) {
+            var btn = $(this);
+            var freight  = $("#freight").val();
+            if(freight == null || freight == "" || freight<0){
+                Toast.error("运费格式不对！");
+                return;
+            }
+            $.post("${base}/store/order/main/updateFreight/" + id, {freight:freight}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
 
     //订单退款
     function orderRefunds(id){
@@ -771,6 +816,9 @@ layout("/layouts/store.html"){
 
         if(row.payStatus <= 1 &&  row.orderStatus == 1){
             buttonList.push('<div class="order_button"><a class="btn btn-info btn-xs" href="javascript:;" onclick="closeOrder(\'' + row.id + '\')">${msg["order.button.closeOrder"]}</a></div>')
+        }
+        if(row.payStatus <= 0 &&  row.orderStatus == 0){
+            buttonList.push('<div class="order_button"><a class="btn btn-info btn-xs" href="javascript:;" onclick="updateFreight(\'' + row.id + '\')">修改运费</a></div>')
         }
         if(row.payStatus == 4){
             buttonList.push('<div class="order_button"><a class="btn btn-info btn-xs" href="javascript:;" onclick="orderRefunds(\'' + row.id + '\')">退款</a></div>')

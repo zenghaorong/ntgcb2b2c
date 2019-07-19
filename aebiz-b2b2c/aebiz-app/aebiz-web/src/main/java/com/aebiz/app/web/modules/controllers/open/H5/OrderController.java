@@ -144,8 +144,15 @@ public class OrderController {
         request.setAttribute("productList",productList);
         request.setAttribute("cartIds",cartIds);
         String freight = sysDictService.getNameByCode("freight");
+        String IntegralRate = sysDictService.getNameByCode("IntegralRate");
+
         BigDecimal b1 = new BigDecimal(freight);
         Double freightMoney = b1.doubleValue();
+
+        BigDecimal b2 = new BigDecimal(IntegralRate);
+        Double IR = b2.doubleValue();
+
+        request.setAttribute("IntegralRate",IR);
         request.setAttribute("freightMoney",freightMoney);
         return "pages/front/h5/niantu/orderConfirmation";
     }
@@ -431,7 +438,11 @@ public class OrderController {
         Double payMoney = CalculateUtils.mul(b1.doubleValue(), num); //会员包月价格
         request.setAttribute("payMoney", payMoney);
         request.setAttribute("monthlyPrice", monthlyPrice);
+        String IntegralRate = sysDictService.getNameByCode("IntegralRate");
+        BigDecimal b2 = new BigDecimal(IntegralRate);
+        Double IR = b2.doubleValue();
 
+        request.setAttribute("IntegralRate",IR);
         return "pages/front/h5/niantu/videoOrderConfirmation";
     }
 
