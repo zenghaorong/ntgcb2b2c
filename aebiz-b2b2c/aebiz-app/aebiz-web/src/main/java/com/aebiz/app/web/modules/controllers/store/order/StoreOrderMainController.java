@@ -355,6 +355,7 @@ public class StoreOrderMainController {
                 break;
             case 8:
                 cnd.and("payStatus","=",OrderPayStatusEnum.NO.getKey());
+                cnd.and("orderStatus","<",OrderStatusEnum.DEAD.getKey());
                 cnd.and("deliveryStatus","=",0);
                 break;
                 //已完成
@@ -1171,7 +1172,7 @@ public class StoreOrderMainController {
             Order_main order_main = orderMainService.fetch(orderId);
             //判断订单状态
             if(OrderPayStatusEnum.REFUNDWAIT.getKey() == order_main.getPayStatus()){
-               //判断订单返回平台
+                //判断订单返回平台
                 if(OrderPayTypeEnum.ALIPAY.getKey()==order_main.getPayType()) {
 
                     //商户订单号和支付宝交易号不能同时为空。 trade_no、  out_trade_no如果同时存在优先取trade_no
