@@ -98,10 +98,8 @@ public class OrderTimeoutJob{
                                         List<Member_Integral> list2 = memberIntegralService.query(iCnd);
                                         Member_Integral m = list2.get(0);
                                         m.setCustomerUuid(order_main.getAccountId());
-                                        m.setTotalIntegral(order_main.getMinusPoints());
-                                        int jf = m.getUseAbleIntegral()+order_main.getMinusPoints();
-                                        m.setUseAbleIntegral(jf);
-                                        memberIntegralService.insert(m);
+                                        m.setUseAbleIntegral(m.getUseAbleIntegral()+order_main.getMinusPoints());
+                                        memberIntegralService.update(m);
                                         Member_Integral_Detail md = new Member_Integral_Detail();
                                         md.setAddIntegral(order_main.getMinusPoints());
                                         md.setCustomerUuid(order_main.getAccountId());

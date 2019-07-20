@@ -48,7 +48,7 @@
             包月月数<span style="color: red;">${num!}个月</span>
         </div>
         <div class="mui-card-header" >
-            <div style="-webkit-user-select:text !important;">积分抵扣:&nbsp<input id="integralNum2" placeholder="" v-on:blur="useIntegral2()"  style="    height: 32px; width: 100px; margin-left: 3px;" value=""></div>
+            <div style="-webkit-user-select:text !important;">积分抵扣:&nbsp<input id="integralNum2" placeholder="" v-on:blur="useIntegral2()"  style="    height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important" value=""></div>
             (剩余积分：{{memberIntegral.useAbleIntegral}})
             <input type="hidden" :value="memberIntegral.useAbleIntegral" id="totalIntegral2">
         </div>

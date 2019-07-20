@@ -60,7 +60,20 @@
 
         </div>
     </div>
-
+    <div style="margin-bottom: 75px;">
+    <div class="mui-card"  v-for="good in feedList" :key="good.id" >
+        <div class="mui-card-content">
+            <div class="mui-card-content">
+                <ul class="mui-table-view">
+                    <div style="margin: 0 10px;border-bottom: 1px solid #e5e5e5;padding-bottom: 10px">
+                        <div>{{good.accountUser.mobile}}<span style="float: right">{{good.feedAt}}</span></div>
+                        <p>{{good.feedNote}}</p>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
     <nav class="mui-bar mui-bar-tab" style="height: 40px;">
         <div class="mui-input-row mui-password" style="border: 0px;">
             <!--<button type="button" id="place"  class="mui-btn mui-btn-primary" style="width: 30%;top: 0px;line-height:1;-->
@@ -85,12 +98,14 @@
         el: '#vue',
         data: {
             video: '',
+            feedList: [],
             time:''
 
         },
         created:function () {   //实例初始化创建完成执行
 
             this.getVideoDesc();     //调用自身方法
+            this.queryFeedback();
 
         },
         methods:{              //定义封装方法
@@ -116,6 +131,34 @@
                 });
 
             },
+
+            //获取列表
+            queryFeedback:function () {
+                var self = this;
+                var status = "${status!}";
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/feedback/queryFeedback",
+                    dataType:"JSON",
+                    data:{
+                        goodsId:'${id!}'
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            $.each(d, function (index, obj) {
+                                obj.feedAt=timestamp(obj.feedAt)
+                                d[index] = obj;
+                            })
+                            self.feedList = d;
+                        } else {
+
+                        }
+                    }
+                });
+
+            },
+
             save:function () {
                 var id= this.video.id;
                 window.location.href="${base!}/open/h5/order/videoOrderConfirmation.html?videoId="+id+"&type=2&num=0";

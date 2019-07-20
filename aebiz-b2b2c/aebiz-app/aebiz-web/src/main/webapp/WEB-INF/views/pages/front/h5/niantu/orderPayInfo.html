@@ -203,7 +203,11 @@
             // }
         }
 
-    })
+    });
+    //进入评价页
+    function goFeedback() {
+        window.location.href = "${base!}/open/h5/feedback/goFeedback?orderId=${orderId}";
+    };
     function confirmReceipt() {
         $.ajax({
             type:"POST",

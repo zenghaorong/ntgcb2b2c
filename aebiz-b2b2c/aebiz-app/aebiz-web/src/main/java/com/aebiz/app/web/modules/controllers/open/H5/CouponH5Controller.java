@@ -211,11 +211,16 @@ public class CouponH5Controller {
             Cnd cnd = Cnd.NEW();
             cnd.and("accountId", "=", accountUser.getAccountId() );
             cnd.and("status","=", 0); //未使用
+
             List<Member_coupon> member_couponList = memberCouponService.query(cnd);
             List<Member_coupon> member_coupons = new ArrayList<>();
             for(Member_coupon member_coupon : member_couponList) {
                 Sales_coupon sales_coupon = salesCouponService.fetch(member_coupon.getCouponId());
                 if(sales_coupon.getDelFlag()){
+                    continue;
+                }
+                int time = getSecondTimestamp(new Date());
+                if(sales_coupon.getEndTime()<time){
                     continue;
                 }
                 member_coupon.setSales_coupon(sales_coupon);

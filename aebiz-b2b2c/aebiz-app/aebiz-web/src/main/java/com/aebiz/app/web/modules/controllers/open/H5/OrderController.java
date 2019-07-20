@@ -24,12 +24,14 @@ import com.aebiz.app.order.modules.models.Order_goods_feedback;
 import com.aebiz.app.order.modules.models.Order_main;
 import com.aebiz.app.order.modules.models.Order_pay_refunds;
 import com.aebiz.app.order.modules.models.em.OrderPayStatusEnum;
+import com.aebiz.app.order.modules.models.em.OrderStatusEnum;
 import com.aebiz.app.order.modules.models.em.OrderTypeEnum;
 import com.aebiz.app.order.modules.services.OrderGoodsService;
 import com.aebiz.app.order.modules.services.OrderMainService;
 import com.aebiz.app.order.modules.services.OrderPayRefundsService;
 import com.aebiz.app.sales.modules.models.Sales_coupon;
 import com.aebiz.app.sales.modules.services.SalesCouponService;
+import com.aebiz.app.sys.modules.models.Sys_dict;
 import com.aebiz.app.sys.modules.services.SysDictService;
 import com.aebiz.app.web.commons.utils.CalculateUtils;
 import com.aebiz.app.web.commons.utils.WXPayUtil;
@@ -112,8 +114,9 @@ public class OrderController {
     @RequestMapping("/orderConfirmation.html")
     public String orderConfirmation(HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
+        Account_user accountUser = new Account_user();
         try {
-            Account_user accountUser = (Account_user) subject.getPrincipal();
+             accountUser = (Account_user) subject.getPrincipal();
             if (accountUser == null) {
                 return "pages/front/h5/niantu/login";
             }
@@ -143,7 +146,23 @@ public class OrderController {
 //        request.setAttribute("num",num);
         request.setAttribute("productList",productList);
         request.setAttribute("cartIds",cartIds);
-        String freight = sysDictService.getNameByCode("freight");
+        Cnd cnda = Cnd.NEW();
+        cnda.and("accountId", "=", accountUser.getAccountId() );
+        cnda.and("defaultValue","=",true);
+        List<Member_address> list = memberAddressService.query(cnda);
+        Member_address member_address = new Member_address();
+        String freight = sysDictService.getNameByCode("freight2");
+        if(list!=null&&list.size()>0){
+            member_address=list.get(0);
+            List<Sys_dict> freight1 = sysDictService.getSubListByCode("freight");
+            for (Sys_dict f:freight1
+                 ) {
+                if(f.getName().equals(member_address.getProvince())){
+                    freight=f.getCode();
+                    break;
+                }
+            }
+        }
         String IntegralRate = sysDictService.getNameByCode("IntegralRate");
 
         BigDecimal b1 = new BigDecimal(freight);
@@ -294,7 +313,15 @@ public class OrderController {
         }
         //查询收货信息
         Member_address member_address = memberAddressService.fetch(addressId);
-        String freight = sysDictService.getNameByCode("freight");
+        String freight = sysDictService.getNameByCode("freight2");
+        List<Sys_dict> freight1 = sysDictService.getSubListByCode("freight");
+            for (Sys_dict f:freight1
+                    ) {
+                if(f.getName().equals(member_address.getProvince())){
+                    freight=f.getCode();
+                    break;
+                }
+            }
 //        Integer.parseInt(freight) * 100; //运费
         Double v = Double.parseDouble(freight)* 100;
         int freightMoney =v.intValue();
@@ -905,6 +932,7 @@ public class OrderController {
             return Result.success("fail","未登录！");
         }
         Order_main order_main = orderMainService.fetch(orderId);
+        order_main.setOrderStatus(OrderStatusEnum.DEAD.getKey());
         order_main.setDelFlag(true);
         orderMainService.update(order_main);
 
@@ -933,10 +961,10 @@ public class OrderController {
                     List<Member_Integral> list2 = memberIntegralService.query(iCnd);
                     Member_Integral m = list2.get(0);
                     m.setCustomerUuid(order_main.getAccountId());
-                    m.setTotalIntegral(order_main.getMinusPoints());
-                    int jf = m.getUseAbleIntegral()+order_main.getMinusPoints();
-                    m.setUseAbleIntegral(jf);
-                    memberIntegralService.insert(m);
+                    m.setUseAbleIntegral(m.getUseAbleIntegral()+order_main.getMinusPoints());
+//                    int jf = m.getUseAbleIntegral()+order_main.getMinusPoints();
+//                    m.setUseAbleIntegral(jf);
+                    memberIntegralService.update(m);
                     Member_Integral_Detail md = new Member_Integral_Detail();
                     md.setAddIntegral(order_main.getMinusPoints());
                     md.setCustomerUuid(order_main.getAccountId());
