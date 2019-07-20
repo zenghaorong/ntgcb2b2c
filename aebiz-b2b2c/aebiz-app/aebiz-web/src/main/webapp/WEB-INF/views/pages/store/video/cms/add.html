@@ -48,11 +48,12 @@ layout("/layouts/store.html"){
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="delFlag" class="col-sm-2 control-label">是否上架</label>
+                            <label for="delFlag2" class="col-sm-2 control-label">是否上架</label>
                             <div class="col-sm-8 switcha">
                                 <div class="mr15">
-                                    <input type="checkbox" id="delFlag" name="delFlag"
+                                    <input type="checkbox" id="delFlag2" name="delFlag2"
                                            class="js-switch-blue" value="false" checked>
+                                    <input value="false" id="delFlag" name="isdel" type="hidden">
                                 </div>
                             </div>
                         </div>
@@ -251,6 +252,13 @@ layout("/layouts/store.html"){
         $("#imageUrl").val("");
     }
 
+    $("#delFlag2").change(function () {
+        if($("#delFlag2").is(":checked")){
+            $("#delFlag").val('1');
+        }else {
+            $("#delFlag").val('2');
+        }
+    })
 
 
 </script>

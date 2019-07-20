@@ -112,6 +112,7 @@ public class ProductController {
             cnd.and("delFlag", "=", 0 );
             cnd.and("sale", "=", 1);
             cnd.and("status", "=", 3);
+            cnd.desc("opAt");
             List<String> goodsIdList = null;
             if(StringUtils.isNotEmpty(classId)){
                 goodsIdList = storeGoodsclassService.getGoodsMainStoreGoodsclassIdList(classId);
@@ -255,12 +256,17 @@ public class ProductController {
                     if(gpList!=null&&gpList.size()>0){
                         Integer salePrice = gpList.get(0).getSalePrice();
                         Integer marketPrice = gpList.get(0).getMarketPrice();
-                        double price = salePrice.doubleValue()/100;
-                        double marketPrice2 = marketPrice.doubleValue()/100;
+                        double price = CalculateUtils.div(salePrice,100,2);
+                        double marketPrice2 = CalculateUtils.div(marketPrice,100,2);
                         o.setPrice(price+"");
                         o.setMarketPrice(marketPrice2+"");
                         o.setSaleNumMonth(gpList.get(0).getSaleNumMonth()+"");
                         o.setStock(gpList.get(0).getStock());
+                        if(gpList.get(0).getWholesalePrice() !=null) {
+                            double wholesalePrice = CalculateUtils.div(gpList.get(0).getWholesalePrice(),100,2);
+                            o.setWholesaleNum(gpList.get(0).getWholesaleNum() + "");
+                            o.setWholesalePrice(wholesalePrice + "");
+                        }
                     }
             return Result.success("ok",o);
         } catch (Exception e) {

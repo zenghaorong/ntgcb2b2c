@@ -91,6 +91,9 @@
         <p>{{product.name}}</p>
         <input type="hidden" id="stock" :value="product.stock">
         <h1>现价：<i>￥</i><span>{{product.price}}</span><em>厂商指导价：<del>￥{{product.marketPrice}}</del></em></h1>
+        <h1 v-if = "product.wholesalePrice != '' && product.wholesalePrice != null">
+            批发价：<i>￥</i><span>{{product.wholesalePrice}}</span><em style="color: #e54545;">购买数量满{{product.wholesaleNum}}可享受批发价</em>
+        </h1>
         <h2>数量：
             <b>
                 <button class="reduce nofocus" onclick="reducePro()">-</button>

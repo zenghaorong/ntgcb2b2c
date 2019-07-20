@@ -231,6 +231,27 @@ public class Goods_main extends BaseModel implements Serializable {
 
     private int stock;
 
+
+    private String wholesalePrice;
+
+    private String wholesaleNum;
+
+    public String getWholesalePrice() {
+        return wholesalePrice;
+    }
+
+    public void setWholesalePrice(String wholesalePrice) {
+        this.wholesalePrice = wholesalePrice;
+    }
+
+    public String getWholesaleNum() {
+        return wholesaleNum;
+    }
+
+    public void setWholesaleNum(String wholesaleNum) {
+        this.wholesaleNum = wholesaleNum;
+    }
+
     public int getStock() {
         return stock;
     }

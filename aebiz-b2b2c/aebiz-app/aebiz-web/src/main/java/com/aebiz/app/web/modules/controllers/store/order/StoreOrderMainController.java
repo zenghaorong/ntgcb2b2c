@@ -370,6 +370,7 @@ public class StoreOrderMainController {
                 break;
             case 5:
                 cnd.and("payStatus","in",OrderPayStatusEnum.REFUNDWAIT.getKey()+","+OrderPayStatusEnum.REFUNDALL.getKey());
+                cnd.asc("payStatus");
                 break;
             default:
         }

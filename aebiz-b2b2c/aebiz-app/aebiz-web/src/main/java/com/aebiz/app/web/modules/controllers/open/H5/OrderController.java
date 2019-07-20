@@ -355,13 +355,14 @@ public class OrderController {
             List<Goods_product> gpList = goodsProductService.query(proCnd);
             if (gpList != null && gpList.size() > 0) {
                 Goods_product goods_product = gpList.get(0);
+                Integer salePrice = goods_product.getSalePrice(); //单位是分
                 //判断取批发价
                 if(goods_product.getWholesaleNum()!=null && thisNum>=goods_product.getWholesaleNum()){
                     Integer price =   goods_product.getWholesalePrice();
-                    goods_product.setSalePrice(price);
+                    salePrice = price;
                 }
 
-                Integer salePrice = goods_product.getSalePrice(); //单位是分
+
                 int n = Integer.parseInt(num);
                 totalMoney += salePrice * n;
                 totalNum+=n;
@@ -955,7 +956,7 @@ public class OrderController {
             //待支付状态
             if(order_main.getPayStatus()==OrderPayStatusEnum.NO.getKey()){
                 //判断是否使用了积分
-                if(order_main.getMinusPoints()!=null){
+                if(order_main.getMinusPoints()!=null && order_main.getMinusPoints()!=0){
                     Cnd iCnd = Cnd.NEW();
                     iCnd.and("customerUuid" ,"=",order_main.getAccountId());
                     List<Member_Integral> list2 = memberIntegralService.query(iCnd);

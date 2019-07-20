@@ -264,6 +264,22 @@ layout("/layouts/store.html"){
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="costPrice" class="col-sm-2 control-label">批发价</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">批发价</span>
+                                            <input type="text" class="form-control input-sm" name="wholesalePrice" id="wholesalePrice" readonly value="${@money.fenToYuan(productsList[0].wholesalePrice)}" data-parsley-price="true" >
+                                        </div>
+                                    </div>
+                                    <label for="salePrice" class="col-sm-1 control-label"><span style="color: red"></span></label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">批发价购买数量</span>
+                                            <input type="text" class="form-control input-sm" name="wholesaleNum" id="wholesaleNum" readonly value="${productsList[0].wholesaleNum}" data-parsley-price="true" data-parsley-required="true" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="stock" class="col-sm-2 control-label">${msg["goods.product.column.stock"]}</label>
                                     <div class="col-sm-2">
                                         <input type="text" id="stock" value="${productsList[0].stock!}" class="form-control" name="stock" readonly data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" >

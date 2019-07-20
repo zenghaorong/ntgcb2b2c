@@ -181,12 +181,12 @@
                     success:function(data){
                         if (data.code == 0) {
                             if(data.msg=='ok2'){
-                                $("#love").removeClass("aActive")
-                                $("#love").addClass("aNoActive")
+                                $("#love span").removeClass("aActive")
+                                $("#love span").addClass("aNoActive")
                             }
                             if(data.msg=='ok1'){
-                                $("#love").removeClass("aNoActive")
-                                $("#love").addClass("aActive")
+                                $("#love span").removeClass("aNoActive")
+                                $("#love span").addClass("aActive")
                             }
                         } else {
                             if(data.code == 2){
@@ -207,8 +207,8 @@
                     },
                     success:function(data){
                         if (data.code == 0) {
-                            $("#love").removeClass("aNoActive")
-                            $("#love").addClass("aActive")
+                            $("#love span").removeClass("aNoActive")
+                            $("#love span").addClass("aActive")
                         } else {
 
                         }

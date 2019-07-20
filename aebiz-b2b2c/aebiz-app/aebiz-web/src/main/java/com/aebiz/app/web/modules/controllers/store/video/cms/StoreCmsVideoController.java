@@ -73,7 +73,7 @@ public class StoreCmsVideoController {
 	@RequestMapping("/addDo")
 	@SJson
 	@RequiresPermissions("store.cms.video.add")
-	public Object addDo(Cms_video cms_video) {
+	public Object addDo(Cms_video cms_video,String isdel) {
 		try {
 			if(Strings.isEmpty(cms_video.getVideoUrl())){
 				return Result.error("请上传视频");
@@ -84,7 +84,13 @@ public class StoreCmsVideoController {
 			Store_user user = (Store_user) SecurityUtils.getSubject().getPrincipal();
 			cms_video.setStoreId(user.getStoreId());
 			cms_video.setPageViews(0);
-			cmsVideoService.insert(cms_video);
+			cms_video = cmsVideoService.insert(cms_video);
+			if("1".equals(isdel) || "false".equals(isdel)){
+				cms_video.setDelFlag(false);
+			}else {
+				cms_video.setDelFlag(true);
+			}
+			cmsVideoService.update(cms_video);
 			return Result.success("globals.result.success");
 		} catch (Exception e) {
 			return Result.error("globals.result.error");
