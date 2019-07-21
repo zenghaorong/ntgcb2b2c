@@ -107,7 +107,7 @@ public class PayH5Controller {
             wxGetPayInfoQO.setProductBody("黏土商城产品-订单支付");
             wxGetPayInfoQO.setProductId(order_main.getAccountId());
             wxGetPayInfoQO.setTotal_fee(order_main.getPayMoney().toString());
-            wxGetPayInfoQO.setThisIp(TcpipUtil.getLocalIpv4(request));
+            wxGetPayInfoQO.setThisIp(TcpipUtil.getClientRealIp(request));
             String json=wxPayService.wxGetPayInfoH5(wxGetPayInfoQO);
             return Result.success("ok",json);
         } catch (Exception e) {

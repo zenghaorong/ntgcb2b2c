@@ -1,5 +1,7 @@
 package com.aebiz.app.web.commons.utils;
 
+import com.alibaba.fastjson.JSON;
+import org.elasticsearch.search.suggest.completion.RegexOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,32 +30,45 @@ public class TcpipUtil {
 	* Copyright  foxtail All right reserved.
 	 */
 	public static String getClientRealIp(HttpServletRequest request){
+		Enumeration<String> enumeration = request.getHeaderNames();
 		String ip = request.getHeader("X-Forwarded-For");
-		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		logger.info("支付调用请求ip-X-Forwarded-For："+ip);
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("Proxy-Client-IP");
+			logger.info("支付调用请求ip-Proxy-Client-IP："+ip);
 		}
-		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("WL-Proxy-Client-IP");
+			logger.info("支付调用请求ip-WL-Proxy-Client-IP："+ip);
 		}
-		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("HTTP_CLIENT_IP");
+			logger.info("支付调用请求ip-HTTP_CLIENT_IP："+ip);
 		}
-		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+			logger.info("支付调用请求ip-HTTP_X_FORWARDED_FOR："+ip);
 		}
-		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("X-Real-IP");
+			logger.info("支付调用请求ip-X-Real-IP："+ip);
 		}
-		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getRemoteAddr();
+			logger.info("支付调用请求ip-request.getRemoteAddr()："+ip);
 		}
-        if(ip != null && ip.length() > 0 && !"unknown".equalsIgnoreCase(ip)){
-            //多次反向代理后会有多个ip值，第一个ip才是真实ip
-            int index = ip.indexOf(",");
-            if(index != -1){
-                ip = ip.substring(0,index);
-            }
-        }
+		if (ip != null && ip.length() > 0 && !"unknown".equalsIgnoreCase(ip)) {
+			//多次反向代理后会有多个ip值，第一个ip才是真实ip
+			int index = ip.indexOf(",");
+			if (index != -1) {
+				ip = ip.substring(0, index);
+			}
+		}
+		logger.info("支付调用结果ip ："+ip);
+		if("127.0.0.1".equals(ip)){
+			ip = "0:0:0:0:0:0:0:1";
+		}
+		logger.info("支付调用结果ip2 ："+ip);
 		return ip;
 	}
 
