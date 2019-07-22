@@ -56,7 +56,7 @@
         商品金额<span style="color: #ff3535;">￥{{zongPrice}}</span>
     </div>
     <div class="mui-card-header" style="-webkit-user-select:text !important;">
-        <div style="-webkit-user-select:auto !important;">积分抵扣:&nbsp<input id="integralNum" onkeyup="this.value=this.value.replace(/\D/g,'')" placeholder="" v-on:blur="useIntegral()"  style="height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important;" value="" ></div>
+        <div style="-webkit-user-select:auto !important;">积分抵扣:&nbsp<input id="integralNum"  placeholder="" v-on:blur="useIntegral()"  style="height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important;" value="" ></div>
         (剩余积分：{{memberIntegral.useAbleIntegral}})
         <input type="hidden" :value="memberIntegral.useAbleIntegral" id="totalIntegral">
         <input type="hidden" value="${IntegralRate}" id="IntegralRate">
@@ -238,7 +238,7 @@
                             self.zongPrice2=self.zongPrice*1+$("#freight").val()*1;
                             self.zongPrice2=self.zongPrice2.toFixed(2);
                             self.zongPrice3=self.zongPrice2;
-                            self.canUserIntegral = parseInt(self.zongPrice*$("#IntegralRate").val()*100);
+                            self.canUserIntegral = parseInt(self.zongPrice*($("#IntegralRate").val()*100));
                             self.getMyOrderCoupon();
                         } else {
 
@@ -323,7 +323,7 @@
                 self.zongPrice = (self.zongPrice*1).toFixed(2) ;
                 self.zongPrice2 = (self.zongPrice2*1).toFixed(2) ;
                 self.zongPrice3=self.zongPrice2;
-                self.canUserIntegral = parseInt(self.zongPrice*$("#IntegralRate").val()*100);
+                self.canUserIntegral = parseInt(self.zongPrice*($("#IntegralRate").val()*100));
 
             },
             save:function () {
@@ -402,6 +402,21 @@
     function goAddress() {
         var json = '${productList}';
         window.location.href="${base!}/open/h5/address/goAddress.html?productList="+encodeURIComponent(json)
+    }
+
+    var bind_name = 'input';
+    if (navigator.userAgent.indexOf("MSIE") != -1){
+        bind_name = 'propertychange';
+    }
+    $('#integralNum').bind(bind_name, function(){
+        clearNoNum(this);
+    })
+
+    //只能输入数字和小数点
+    function clearNoNum(obj)
+
+    {
+        obj.value=obj.value.replace(/\D/g,'')
     }
 </script>
 
