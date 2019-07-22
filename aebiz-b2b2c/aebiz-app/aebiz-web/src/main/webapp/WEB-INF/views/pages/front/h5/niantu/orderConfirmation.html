@@ -56,7 +56,7 @@
         商品金额<span style="color: #ff3535;">￥{{zongPrice}}</span>
     </div>
     <div class="mui-card-header" style="-webkit-user-select:text !important;">
-        <div style="-webkit-user-select:auto !important;">积分抵扣:&nbsp<input id="integralNum" placeholder="" v-on:blur="useIntegral()"  style="height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important;" value=""></div>
+        <div style="-webkit-user-select:auto !important;">积分抵扣:&nbsp<input id="integralNum" onkeyup="this.value=this.value.replace(/\D/g,'')" placeholder="" v-on:blur="useIntegral()"  style="height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important;" value="" ></div>
         (剩余积分：{{memberIntegral.useAbleIntegral}})
         <input type="hidden" :value="memberIntegral.useAbleIntegral" id="totalIntegral">
         <input type="hidden" value="${IntegralRate}" id="IntegralRate">
@@ -177,6 +177,7 @@
             },
             useIntegral:function(){
                 var integral= $("#integralNum").val();
+
                 var totalIntegral= $("#totalIntegral").val()*1;
 
                 if(integral>totalIntegral){
@@ -193,8 +194,14 @@
                         ,skin: 'msg'
                         ,time: 2 //2秒后自动关闭
                     });
-                    $("#integralNum").val(this.canUserIntegral);
-                    integral=this.canUserIntegral;
+                    if(this.canUserIntegral>totalIntegral){
+                        $("#integralNum").val(totalIntegral);
+                        integral=totalIntegral;
+                    }else {
+                        $("#integralNum").val(this.canUserIntegral);
+                        integral=this.canUserIntegral;
+                    }
+
                 }
                 this.zongPrice2=this.zongPrice3;
                 if(integral/(this.integralMoney*1)>=this.zongPrice2-$("#freight").val()*1){
@@ -396,7 +403,6 @@
         var json = '${productList}';
         window.location.href="${base!}/open/h5/address/goAddress.html?productList="+encodeURIComponent(json)
     }
-
 </script>
 
 </body>

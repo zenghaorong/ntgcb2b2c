@@ -37,7 +37,7 @@
             订单确认
         </h1>
     </header>
-
+    <input type="hidden" value="${IntegralRate}" id="IntegralRate">
     <!--视频单个购买订单-->
   <!--#if(type == "3"){#-->
     <div class="mui-card" style="margin-top: 60px;">
@@ -48,9 +48,13 @@
             包月月数<span style="color: red;">${num!}个月</span>
         </div>
         <div class="mui-card-header" >
-            <div style="-webkit-user-select:text !important;">积分抵扣:&nbsp<input id="integralNum2" placeholder="" v-on:blur="useIntegral2()"  style="    height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important" value=""></div>
+            <div style="-webkit-user-select:text !important;">积分抵扣:&nbsp<input id="integralNum2" onkeyup="this.value=this.value.replace(/\D/g,'')" placeholder="" v-on:blur="useIntegral2()"  style="    height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important" value=""></div>
             (剩余积分：{{memberIntegral.useAbleIntegral}})
             <input type="hidden" :value="memberIntegral.useAbleIntegral" id="totalIntegral2">
+        </div>
+        <div class="mui-card-header">
+            <p><span>说明：</span>1积分抵扣1分钱</br>
+                <span>最多可使用{{canUserIntegral}}积分来抵扣商品</span></p>
         </div>
         <!--<div class="mui-card-header">-->
         <!--优惠劵<span style="color: red;">￥10.00</span>-->
@@ -92,10 +96,9 @@
             商品金额<span style="color: red;">￥{{videoInfo.price}}</span>
         </div>
         <div class="mui-card-header" >
-            <div style="-webkit-user-select:text !important;">积分抵扣:&nbsp<input id="integralNum" placeholder="" v-on:blur="useIntegral()"  style="height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important" value=""></div>
+            <div style="-webkit-user-select:text !important;">积分抵扣:&nbsp<input id="integralNum" onkeyup="this.value=this.value.replace(/\D/g,'')" placeholder="" v-on:blur="useIntegral()"  style="height: 32px; width: 100px; margin-left: 3px;-webkit-user-select:text !important" value=""></div>
             (剩余积分：{{memberIntegral.useAbleIntegral}})
             <input type="hidden" :value="memberIntegral.useAbleIntegral" id="totalIntegral">
-            <input type="hidden" value="${IntegralRate}" id="IntegralRate">
         </div>
         <div class="mui-card-header">
             <p><span>说明：</span>1积分抵扣1分钱</br>
@@ -259,8 +262,13 @@
                         ,skin: 'msg'
                         ,time: 2 //2秒后自动关闭
                     });
-                    $("#integralNum").val(this.canUserIntegral);
-                    integral=this.canUserIntegral;
+                    if(this.canUserIntegral>totalIntegral){
+                        $("#integralNum").val(totalIntegral);
+                        integral=totalIntegral;
+                    }else {
+                        $("#integralNum").val(this.canUserIntegral);
+                        integral=this.canUserIntegral;
+                    }
                 }
                 // this.zongPrice=this.zongPrice2;
                 if(integral == ""){
@@ -293,6 +301,21 @@
                         ,time: 2 //2秒后自动关闭
                     });
                     $("#integralNum2").val(totalIntegral);
+                }
+                if(integral>this.canUserIntegral){
+                    layer.open({
+                        content: "该商品最多可使用"+this.canUserIntegral+"积分抵扣"
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    if(this.canUserIntegral>totalIntegral){
+                        $("#integralNum2").val(totalIntegral);
+                        integral=totalIntegral;
+                    }else {
+                        $("#integralNum2").val(this.canUserIntegral);
+                        integral=this.canUserIntegral;
+                    }
+
                 }
                 this.zongPrice3=this.zongPrice4;
                 if(integral/(this.integralMoney*1)>=this.zongPrice4){

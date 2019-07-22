@@ -50,7 +50,7 @@ public class MemberIntegralServiceImpl extends BaseServiceImpl<Member_Integral> 
             if(list2!=null&&list2.size()>0){
                 Member_Integral mi = list2.get(0);
                 payMoney=payMoney*100;
-                mi.setUseAbleIntegral(mi.getUseAbleIntegral()+integral_rule.getIntegralCount());
+                mi.setUseAbleIntegral(mi.getUseAbleIntegral()+integral_rule.getIntegralCount()*payMoney.intValue());
                 mi.setTotalIntegral(mi.getTotalIntegral()+integral_rule.getIntegralCount()*payMoney.intValue());
                 this.update(mi);
                 Member_Integral_Detail md = new Member_Integral_Detail();

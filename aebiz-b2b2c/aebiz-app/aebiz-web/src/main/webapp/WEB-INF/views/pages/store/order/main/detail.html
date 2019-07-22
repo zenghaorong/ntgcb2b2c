@@ -111,7 +111,7 @@ layout("/layouts/store.html"){
                             物流单号:   <span>${obj.expressNo!}</span>
                         </div>
                         <div class="col-md-12" style="padding: 5px 0px">
-                            收货地址:   <span>${@area.getNameByCode(obj.deliveryProvince)} ${@area.getNameByCode(obj.deliveryCity)} ${@area.getNameByCode(obj.deliveryCounty)} ${obj.deliveryAddress}</span>
+                            收货地址:   <span>${obj.deliveryProvince} ${obj.deliveryCity} ${obj.deliveryCounty} ${obj.deliveryAddress}</span>
                         </div>
                     </div>
                 </div>
