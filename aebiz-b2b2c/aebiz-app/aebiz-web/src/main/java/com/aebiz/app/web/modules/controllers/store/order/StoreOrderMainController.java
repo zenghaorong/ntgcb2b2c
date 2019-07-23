@@ -1240,17 +1240,17 @@ public class StoreOrderMainController {
                         if (ruleList != null && ruleList.size() > 0) {
                             integral_rule = ruleList.get(0);
                         }
-                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral() + order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney()*100);
+                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral() + order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney());
                         memberIntegralService.update(member_integral);
                         Member_Integral_Detail mid = new Member_Integral_Detail();
 
                         mid.setCustomerUuid(order_main.getAccountId());
-                        if(minus>integral_rule.getIntegralCount()*order_main.getPayMoney()*100){
+                        if(minus>integral_rule.getIntegralCount()*order_main.getPayMoney()){
                             mid.setIntegralType(1);
-                            mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney()*100);
+                            mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney());
                         }else {
                             mid.setIntegralType(5);
-                            mid.setAddIntegral(integral_rule.getIntegralCount()*order_main.getPayMoney()*100-order_main.getMinusPoints());
+                            mid.setAddIntegral(integral_rule.getIntegralCount()*order_main.getPayMoney()-order_main.getMinusPoints());
                         }
 
                         mid.setIntegralDesc("退款积分退还");
@@ -1282,17 +1282,17 @@ public class StoreOrderMainController {
                         if (ruleList != null && ruleList.size() > 0) {
                             integral_rule = ruleList.get(0);
                         }
-                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral() + order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney()*100);
+                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral() + order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney());
                         memberIntegralService.update(member_integral);
                         Member_Integral_Detail mid = new Member_Integral_Detail();
 
                         mid.setCustomerUuid(order_main.getAccountId());
-                        if(minus>integral_rule.getIntegralCount()*order_main.getPayMoney()*100){
+                        if(minus>integral_rule.getIntegralCount()*order_main.getPayMoney()){
                             mid.setIntegralType(1);
-                            mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney()*100);
+                            mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney());
                         }else {
                             mid.setIntegralType(5);
-                            mid.setAddIntegral(integral_rule.getIntegralCount()*order_main.getPayMoney()*100-order_main.getMinusPoints());
+                            mid.setAddIntegral(integral_rule.getIntegralCount()*order_main.getPayMoney()-order_main.getMinusPoints());
                         }
 
                         mid.setIntegralDesc("退款积分退还");
