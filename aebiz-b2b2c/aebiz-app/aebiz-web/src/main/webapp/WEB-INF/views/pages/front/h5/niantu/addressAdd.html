@@ -126,6 +126,9 @@
                             $("#city").empty();
                             $("#area").empty();
                             for(var i=0;i<d.length;i++){
+                                if(d[i].name.indexOf("香港")!=-1 || d[i].name.indexOf("台湾")!=-1 || d[i].name.indexOf("澳门")!=-1){
+                                    continue;
+                                }
                                 var o = "<option value="+d[i].id+">"+d[i].name+"</option>";
                                 opt=opt+o;
                             }
@@ -194,6 +197,10 @@
                         ,time: 2 //2秒后自动关闭
                     });
                     return;
+                }
+
+                if(areaName.indexOf("请选择")!=-1){
+                    areaName = "";
                 }
 
                 $.ajax({
