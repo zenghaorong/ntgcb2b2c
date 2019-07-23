@@ -97,6 +97,7 @@ public class StoreSalesCouponController {
             cnd.and("checkStatus", "=", Integer.valueOf(p_checkStatus));
         }
 		cnd.and("delFlag", "=", false);
+		cnd.desc("endTime");
 		cnd.desc("opAt");
     	return salesCouponService.data(dataTable.getLength(), dataTable.getStart(), dataTable.getDraw(), dataTable.getOrders(), dataTable.getColumns(), cnd, null);
     }

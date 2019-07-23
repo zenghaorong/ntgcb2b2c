@@ -12,6 +12,12 @@ import com.aebiz.app.goods.modules.models.Goods_main;
 import com.aebiz.app.goods.modules.models.Goods_product;
 import com.aebiz.app.goods.modules.services.GoodsImageService;
 import com.aebiz.app.goods.modules.services.GoodsProductService;
+import com.aebiz.app.integral.modules.models.Integral_Rule;
+import com.aebiz.app.integral.modules.models.Member_Integral;
+import com.aebiz.app.integral.modules.models.Member_Integral_Detail;
+import com.aebiz.app.integral.modules.services.IntegralRuleService;
+import com.aebiz.app.integral.modules.services.MemberIntegralDetailService;
+import com.aebiz.app.integral.modules.services.MemberIntegralService;
 import com.aebiz.app.member.modules.models.Member_account;
 import com.aebiz.app.member.modules.models.Member_address;
 import com.aebiz.app.member.modules.models.Member_coupon;
@@ -87,6 +93,15 @@ public class StoreOrderMainController {
 
     @Autowired
     private OrderMainService orderMainService;
+
+    @Autowired
+    private MemberIntegralService memberIntegralService;
+
+    @Autowired
+    private IntegralRuleService integralRuleService;
+
+    @Autowired
+    private MemberIntegralDetailService memberIntegralDetailService;
 
     @Autowired
     private OrderGoodsService orderGoodsService;
@@ -1208,6 +1223,32 @@ public class StoreOrderMainController {
                     JSONObject jsonObject = JSONObject.parseObject(jsonStr);
                     JSONObject vo = jsonObject.getJSONObject("alipay_trade_refund_response");
                     String code = vo.getString("code");
+                    Cnd mi = Cnd.NEW();
+                    mi.and("delFlag","=",false);
+                    mi.and("customerUuid","=",order_main.getAccountId());
+                    List<Member_Integral> miList = memberIntegralService.query(mi);
+                    if(miList!=null&&miList.size()>0){
+                        Member_Integral member_integral = miList.get(0);
+                        int minus = 0;
+                        if(order_main.getMinusPoints()>0){
+                            minus=order_main.getMinusPoints();
+                        }
+                        Cnd ruleCnd = Cnd.NEW();
+                        ruleCnd.and("ruleCode", "=", "buyIntegral");
+                    List<Integral_Rule> ruleList = integralRuleService.query(ruleCnd);
+                    Integral_Rule integral_rule = new Integral_Rule();
+                    if(ruleList!=null&&ruleList.size()>0) {
+                        integral_rule = ruleList.get(0);
+                    }
+                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral()+order_main.getMinusPoints()-integral_rule.getIntegralCount());
+                        memberIntegralService.update(member_integral);
+                        Member_Integral_Detail mid = new Member_Integral_Detail();
+                        mid.setAddIntegral(order_main.getMinusPoints()-integral_rule.getIntegralCount());
+                        mid.setCustomerUuid(order_main.getAccountId());
+                        mid.setIntegralType(1);
+                        mid.setIntegralDesc("退款积分退还");
+                        memberIntegralDetailService.insert(mid);
+                    }
                     if ("10000".equals(code)) {
                         order_main.setPayStatus(OrderPayStatusEnum.REFUNDALL.getKey());
                         orderMainService.update(order_main);
@@ -1217,6 +1258,32 @@ public class StoreOrderMainController {
                     }
 //                    return Result.error("订单状态不正确");
                 }else{
+                    Cnd mi = Cnd.NEW();
+                    mi.and("delFlag","=",false);
+                    mi.and("customerUuid","=",order_main.getAccountId());
+                    List<Member_Integral> miList = memberIntegralService.query(mi);
+                    if(miList!=null&&miList.size()>0) {
+                        Member_Integral member_integral = miList.get(0);
+                        int minus = 0;
+                        if (order_main.getMinusPoints() > 0) {
+                            minus = order_main.getMinusPoints();
+                        }
+                        Cnd ruleCnd = Cnd.NEW();
+                        ruleCnd.and("ruleCode", "=", "buyIntegral");
+                        List<Integral_Rule> ruleList = integralRuleService.query(ruleCnd);
+                        Integral_Rule integral_rule = new Integral_Rule();
+                        if (ruleList != null && ruleList.size() > 0) {
+                            integral_rule = ruleList.get(0);
+                        }
+                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral() + order_main.getMinusPoints() - integral_rule.getIntegralCount());
+                        memberIntegralService.update(member_integral);
+                        Member_Integral_Detail mid = new Member_Integral_Detail();
+                        mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount());
+                        mid.setCustomerUuid(order_main.getAccountId());
+                        mid.setIntegralType(1);
+                        mid.setIntegralDesc("退款积分退还");
+                        memberIntegralDetailService.insert(mid);
+                    }
                     WxGetPayInfoQO wxGetPayInfoQO = new WxGetPayInfoQO();
                     wxGetPayInfoQO.setTotal_fee(order_main.getPayMoney().toString());
                     wxGetPayInfoQO.setOut_trade_no(orderId);
