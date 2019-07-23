@@ -1227,25 +1227,32 @@ public class StoreOrderMainController {
                     mi.and("delFlag","=",false);
                     mi.and("customerUuid","=",order_main.getAccountId());
                     List<Member_Integral> miList = memberIntegralService.query(mi);
-                    if(miList!=null&&miList.size()>0){
+                    if(miList!=null&&miList.size()>0) {
                         Member_Integral member_integral = miList.get(0);
                         int minus = 0;
-                        if(order_main.getMinusPoints()>0){
-                            minus=order_main.getMinusPoints();
+                        if (order_main.getMinusPoints() > 0) {
+                            minus = order_main.getMinusPoints();
                         }
                         Cnd ruleCnd = Cnd.NEW();
                         ruleCnd.and("ruleCode", "=", "buyIntegral");
-                    List<Integral_Rule> ruleList = integralRuleService.query(ruleCnd);
-                    Integral_Rule integral_rule = new Integral_Rule();
-                    if(ruleList!=null&&ruleList.size()>0) {
-                        integral_rule = ruleList.get(0);
-                    }
-                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral()+order_main.getMinusPoints()-integral_rule.getIntegralCount());
+                        List<Integral_Rule> ruleList = integralRuleService.query(ruleCnd);
+                        Integral_Rule integral_rule = new Integral_Rule();
+                        if (ruleList != null && ruleList.size() > 0) {
+                            integral_rule = ruleList.get(0);
+                        }
+                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral() + order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney()*100);
                         memberIntegralService.update(member_integral);
                         Member_Integral_Detail mid = new Member_Integral_Detail();
-                        mid.setAddIntegral(order_main.getMinusPoints()-integral_rule.getIntegralCount());
+
                         mid.setCustomerUuid(order_main.getAccountId());
-                        mid.setIntegralType(1);
+                        if(minus>integral_rule.getIntegralCount()*order_main.getPayMoney()*100){
+                            mid.setIntegralType(1);
+                            mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney()*100);
+                        }else {
+                            mid.setIntegralType(5);
+                            mid.setAddIntegral(integral_rule.getIntegralCount()*order_main.getPayMoney()*100-order_main.getMinusPoints());
+                        }
+
                         mid.setIntegralDesc("退款积分退还");
                         memberIntegralDetailService.insert(mid);
                     }
@@ -1275,12 +1282,19 @@ public class StoreOrderMainController {
                         if (ruleList != null && ruleList.size() > 0) {
                             integral_rule = ruleList.get(0);
                         }
-                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral() + order_main.getMinusPoints() - integral_rule.getIntegralCount());
+                        member_integral.setUseAbleIntegral(member_integral.getUseAbleIntegral() + order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney()*100);
                         memberIntegralService.update(member_integral);
                         Member_Integral_Detail mid = new Member_Integral_Detail();
-                        mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount());
+
                         mid.setCustomerUuid(order_main.getAccountId());
-                        mid.setIntegralType(1);
+                        if(minus>integral_rule.getIntegralCount()*order_main.getPayMoney()*100){
+                            mid.setIntegralType(1);
+                            mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney()*100);
+                        }else {
+                            mid.setIntegralType(5);
+                            mid.setAddIntegral(integral_rule.getIntegralCount()*order_main.getPayMoney()*100-order_main.getMinusPoints());
+                        }
+
                         mid.setIntegralDesc("退款积分退还");
                         memberIntegralDetailService.insert(mid);
                     }
