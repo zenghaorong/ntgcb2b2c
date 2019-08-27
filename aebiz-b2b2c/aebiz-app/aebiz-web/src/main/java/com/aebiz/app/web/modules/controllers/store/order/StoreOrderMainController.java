@@ -1246,10 +1246,10 @@ public class StoreOrderMainController {
 
                         mid.setCustomerUuid(order_main.getAccountId());
                         if(minus>integral_rule.getIntegralCount()*order_main.getPayMoney()){
-                            mid.setIntegralType(1);
+                            mid.setIntegralType(6);
                             mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney());
                         }else {
-                            mid.setIntegralType(5);
+                            mid.setIntegralType(6);
                             mid.setAddIntegral(integral_rule.getIntegralCount()*order_main.getPayMoney()-order_main.getMinusPoints());
                         }
 
@@ -1288,10 +1288,10 @@ public class StoreOrderMainController {
 
                         mid.setCustomerUuid(order_main.getAccountId());
                         if(minus>integral_rule.getIntegralCount()*order_main.getPayMoney()){
-                            mid.setIntegralType(1);
+                            mid.setIntegralType(6);
                             mid.setAddIntegral(order_main.getMinusPoints() - integral_rule.getIntegralCount()*order_main.getPayMoney());
                         }else {
-                            mid.setIntegralType(5);
+                            mid.setIntegralType(6);
                             mid.setAddIntegral(integral_rule.getIntegralCount()*order_main.getPayMoney()-order_main.getMinusPoints());
                         }
 
