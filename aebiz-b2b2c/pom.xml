@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <project.build.jdk>${java.version}</project.build.jdk>
-        <spring.version>4.3.6.RELEASE</spring.version>
+        <spring.version>5.2.20.RELEASE</spring.version>
         <jetty.version>9.3.11.v20160721</jetty.version>
         <nutz.version>1.r.62-SNAPSHOT</nutz.version>
     </properties>
